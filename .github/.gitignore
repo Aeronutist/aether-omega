@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Generated simulation output
+aether_demo.ll
+run-output.txt
+
+# Operating-system files
+.DS_Store
+Thumbs.db
+
+# Local secrets
+.env
+.env.*
