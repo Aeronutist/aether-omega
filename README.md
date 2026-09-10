@@ -76,3 +76,38 @@ on each push and pull request.
 
 Analytic reference values in the paper are not a captured execution
 transcript. Consult a successful workflow run for execution evidence.
+## Interactive website
+
+An interactive Streamlit interface is included in `app.py`.
+
+It provides:
+
+- compiler execution and validation;
+- convergence tables;
+- frequency and coordinate-travel-time charts;
+- ten selectable ASCII spacetime frames;
+- generated IR;
+- downloadable numerical samples and execution logs.
+
+The website executes only the bundled benchmark program.
+
+## Browser-only deployment
+
+1. Fork or create a copy of this repository.
+2. Confirm that GitHub Actions passes.
+3. Sign in to Streamlit Community Cloud.
+4. Select the repository and the `main` branch.
+5. Set the application entrypoint to `app.py`.
+6. Deploy.
+
+## Validation status
+
+Consult the repository's Actions tab for actual execution evidence.
+The paper's analytic reference values are not a captured run transcript.
+
+## Project status
+
+Experimental scalar prototype.
+
+The broader Aether-Ω language facilities remain design proposals.
+This project is not a production compiler or a machine-verified system.
