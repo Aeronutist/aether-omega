@@ -1,10 +1,33 @@
-# Aether-Ω: A Capability-Safe Scientific Language and an Executable Relativistic Communication Model
+# Aether-Ω: Language Design and a Scalar SSA Prototype for Rindler Communication
 
 ## Abstract
 
-This document specifies **Aether-Ω**, a programming language for parallel, differentiable, geometrical, and quantum-classical computation. It also provides a runnable, standard-library-only Python compiler and interpreter for a deliberately bounded scalar subset of that language.
+## Abstract
 
-The numerical application concerns two uniformly accelerated observers in Minkowski spacetime. Their proper accelerations differ, but they belong to the same Born-rigid Rindler congruence. Bidirectional laser communication is modeled by integrating radial null characteristics with fourth-order Runge–Kutta time stepping. The implementation performs at least 512 steps per characteristic calculation, samples 512 emission intervals, compares multiple resolutions, emits SSA and LLVM-like textual IR, and generates numerical tables, frequency plots, and ten sequential ASCII spacetime frames.
+We present Aether-Ω, a proposed language architecture for parallel,
+differentiable, geometry-aware, and quantum-classical computation,
+together with an executable scalar compiler prototype.
+
+The implemented subset provides lexical analysis, parsing, scalar type
+checking, structured-control-flow lowering to static single assignment
+form, LLVM-like textual rendering, and execution through an SSA
+interpreter. The broader tensor, automatic-differentiation, capability,
+verification, accelerator, and quantum facilities are specified design
+proposals rather than implemented backends.
+
+The application models bidirectional light communication between two
+uniformly accelerated observers in the same Born-rigid Rindler
+congruence in flat Minkowski spacetime. Numerical integration of radial
+null characteristics is compared with exact reception-time and
+frequency-ratio formulas. The event-time method has fourth-order
+discretization error in exact arithmetic.
+
+A Streamlit interface exposes numerical tables, convergence results,
+generated IR, execution logs, and ASCII spacetime frames. Analytic
+reference values are distinguished from captured execution results.
+The work is an educational research prototype, not a production
+compiler, a machine-verified implementation, or a simulation of
+dynamical spacetime.
 
 A central physical point is that the Rindler gravitational redshift and the inertial-frame Doppler shift are **two descriptions of the same frequency ratio**. Multiplying them as independent corrections would double-count the effect.
 
