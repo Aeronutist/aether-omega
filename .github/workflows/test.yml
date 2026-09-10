@@ -1,0 +1,71 @@
+name: Validate Aether-Omega
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install web dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Check Python syntax
+        run: python -m py_compile aether_omega.py app.py
+
+      - name: Run compiler and numerical validation
+        shell: bash
+        run: |
+          set -o pipefail
+          python aether_omega.py | tee run-output.txt
+
+      - name: Smoke-test Streamlit application
+        run: |
+          python - <<'PY'
+          from streamlit.testing.v1 import AppTest
+
+          app = AppTest.from_file("app.py")
+          app.run(timeout=180)
+
+          if len(app.exception):
+              raise SystemExit(
+                  f"Streamlit raised an exception: {app.exception}"
+              )
+
+          if len(app.error):
+              raise SystemExit(
+                  f"Streamlit displayed an error: {app.error}"
+              )
+
+          print("Streamlit application smoke test passed.")
+          PY
+
+      - name: Record installed dependency versions
+        if: always()
+        run: python -m pip freeze > environment.txt
+
+      - name: Upload validation artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aether-validation
+          path: |
+            run-output.txt
+            aether_demo.ll
+            environment.txt
+          if-no-files-found: warn
