@@ -2846,6 +2846,177 @@ Production verification would require:
 - proof-carrying assumptions at the host boundary.
 
 ---
+## Reproducibility, Numerical Interpretation, and Deployment
+
+### Implementation boundary
+
+The executable artifact implements a scalar subset of the proposed
+language. Tensor operations, automatic differentiation, geometry-aware
+typing, formal contracts, capability checking, heterogeneous scheduling,
+and quantum resources are not implemented by the Python compiler.
+
+The Streamlit frontend adds third-party presentation dependencies.
+The scalar compiler and interpreter themselves use only the Python
+standard library.
+
+### Meaning of the step counts
+
+The propagation routine integrates an auxiliary characteristic over
+
+$$
+0 \le \eta-\eta_e \le 8
+$$
+
+using
+
+$$
+h=\frac{8}{N}.
+$$
+
+Physical reception occurs near
+
+$$
+\eta-\eta_e=\ln 2.
+$$
+
+The number of integration intervals before reception is therefore
+approximately
+
+$$
+N_{\mathrm{flight}}
+\approx
+\frac{N\ln 2}{8}.
+$$
+
+At $N=512$, this is approximately 44.36 intervals, with the crossing
+contained in the next interval.
+
+Thus, “512 propagation steps” must not be interpreted as 512 steps
+between emission and reception. The remaining integration steps extend
+an auxiliary characteristic beyond detection.
+
+Separately, the communication sweep uses 512 emission intervals,
+corresponding to 513 emission samples per direction.
+
+### Numerical event interpolation
+
+For the linear characteristic equation
+
+$$
+\rho'=s\rho,
+$$
+
+RK4 advances the state by
+
+$$
+\rho_{j+1}=R(sh)\rho_j,
+$$
+
+where
+
+$$
+R(z)=1+z+\frac{z^2}{2}+\frac{z^3}{6}+\frac{z^4}{24}.
+$$
+
+The event locator interpolates logarithmically between adjacent states.
+In exact arithmetic, the corresponding delays are
+
+$$
+d_N^+=\frac{h\ln 2}{\ln R(h)}
+$$
+
+and
+
+$$
+d_N^-=-\frac{h\ln 2}{\ln R(-h)}.
+$$
+
+This yields fourth-order event-time convergence. The method exploits
+the exponential structure of this particular ODE and is not a
+general-purpose event-location prescription for curved-spacetime
+geodesics.
+
+### Two frequency estimators at finite resolution
+
+The exact continuum theory gives identical frequency ratios from
+crest timing and the invariant photon-energy formula.
+
+The current numerical implementation evaluates the Doppler estimator
+
+$$
+q_{\mathrm{Doppler},N}=\exp(-s d_N).
+$$
+
+Because $d_N$ has discretization error, this estimator differs slightly
+from the exact ratio.
+
+By contrast, the numerical reception-time mapping used by this
+stationary benchmark is
+
+$$
+\tau_r=\rho_r(\eta_e+d_N).
+$$
+
+Since $d_N$ is independent of $\eta_e$, differentiation gives
+
+$$
+q_{\mathrm{crest},N}
+=
+\frac{d\tau_e}{d\tau_r}
+=
+\frac{\rho_e}{\rho_r}.
+$$
+
+Therefore the two estimators need not agree exactly at finite
+resolution. Their discrepancy is a useful consistency diagnostic,
+not a new physical frequency effect.
+
+For the current method, the discrepancy is fourth order in the
+step size in exact arithmetic.
+
+### Visualization provenance
+
+Observer coordinates and displayed photon characteristics are
+evaluated from analytic formulas. The ASCII viewport illustrates the
+reference physical solution rather than displaying the accumulated
+RK4 trajectory error.
+
+Frames use common Rindler time. They are not simultaneous
+Minkowski-time snapshots and do not represent the optical appearance
+seen by an astronaut.
+
+### Execution evidence
+
+Analytic tables in this paper are reference calculations, not
+execution transcripts.
+
+A reproducible numerical report should identify:
+
+- the repository commit;
+- the Python version;
+- installed dependency versions;
+- the workflow run;
+- the captured validation log;
+- the generated IR;
+- the numerical CSV when using the web interface.
+
+A successful automated run establishes that the included checks
+passed in that environment. It does not establish complete compiler
+correctness or a machine-checked physical proof.
+
+### Deployment and security
+
+The public web interface executes only the bundled program.
+
+It does not accept arbitrary visitor-supplied Aether-Ω source, Python
+code, filesystem paths, or shell commands.
+
+This restriction reduces exposure but is not a formal security
+guarantee. The hosting platform, Python runtime, dependencies, and
+application code remain part of the trusted computing base.
+
+Streamlit caching may reuse previously computed successful results.
+A displayed result is not necessarily a new execution for each visitor.
 
 # 11. Conclusion
 
